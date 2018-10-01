@@ -6,6 +6,7 @@ var action = process.argv[2];
 var input = process.argv.slice(3).join(" ");
 var request = require("request");
 var moment = require("moment");
+var fs = require("fs");
 var bandsUrl = "https://rest.bandsintown.com/artists/" + input + "/events?app_id=codingbootcamp";
 var movieUrl = "http://www.omdbapi.com/?t=" + input + "&y=&plot=short&apikey=de79b866";
 
@@ -20,6 +21,10 @@ switch (action) {
 
 	case "movie-this":
 		movieThis();
+		break;
+
+	case "do-what-it-says":
+		doWhatItSays();
 		break;
 }
 
@@ -36,8 +41,23 @@ function concertThis() {
 	});
 }
 
-//NEED TO ADD MR.NOBODY AS A DEFAULT///
+// "The Sign" by Ace of Base as default - DO I NEED A LOOP?
+function spotifyThisSong(input) {
+	spotify.search({ type: 'track', query: input, limit: 1 }, function (err, data) {
+		if (err) {
+			return console.log('Error occurred: ' + err);
+		}
+		var songInfo = data.tracks.items
+		for (var i = 0; i < songInfo.length; i++) {
+			console.log("Artist(s): " + songInfo[i].album.artists[i].name);
+			console.log("Song Name: " + songInfo[i].name);
+			console.log("Preview URL: " + songInfo[i].preview_url);
+			console.log("Album Name: " + songInfo[i].album.name);
+		}
+	});
+}
 
+//NEED TO ADD MR.NOBODY AS A DEFAULT///
 function movieThis() {
 	request(movieUrl, function (error, response, body) {
 		if (!error && response.statusCode === 200) {
@@ -53,21 +73,16 @@ function movieThis() {
 	});
 }
 
-// "The Sign" by Ace of Base as default
 
-function spotifyThisSong(input) {
-	spotify.search({ type: 'track', query: input, limit: 1}, function (err, data) {
-		if (err) {
-			return console.log('Error occurred: ' + err);
+function doWhatItSays() {
+	fs.readFile("random.txt", "utf8", function (error, data) {
+		if (error) {
+			return console.log(error);
 		}
-		var songInfo = data.tracks.items
-		for (var i = 0; i < songInfo.length; i++) {
-			console.log("Artist(s): " + songInfo[i].album.artists[i].name);
-			console.log("Song Name: " + songInfo[i].name);
-			console.log("Preview URL: " + songInfo[i].preview_url);
-			console.log("Album Name: " + songInfo[i].album.name);
-		}
-
-	
-	});
+		var dataArray = data.split(",");
+		action = dataArray[0];
+		input = dataArray[1];
+		console.log(action + " " + input);
+		spotifyThisSong(input);
+		});
 }

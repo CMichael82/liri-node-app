@@ -11,12 +11,16 @@ var movieUrl = "http://www.omdbapi.com/?t=" + input + "&y=&plot=short&apikey=de7
 
 switch (action) {
 	case "concert-this":
-	concertThis();
-	break;
-	
+		concertThis();
+		break;
+
+	case "spotify-this-song":
+		spotifyThisSong(input);
+		break;
+
 	case "movie-this":
-	movieThis();
-	break;
+		movieThis();
+		break;
 }
 
 function concertThis() {
@@ -32,6 +36,8 @@ function concertThis() {
 	});
 }
 
+//NEED TO ADD MR.NOBODY AS A DEFAULT///
+
 function movieThis() {
 	request(movieUrl, function (error, response, body) {
 		if (!error && response.statusCode === 200) {
@@ -44,5 +50,24 @@ function movieThis() {
 			console.log("Plot: " + movieInfo.Plot);
 			console.log("Actors: " + movieInfo.Actors);
 		}
+	});
+}
+
+// "The Sign" by Ace of Base as default
+
+function spotifyThisSong(input) {
+	spotify.search({ type: 'track', query: input, limit: 1}, function (err, data) {
+		if (err) {
+			return console.log('Error occurred: ' + err);
+		}
+		var songInfo = data.tracks.items
+		for (var i = 0; i < songInfo.length; i++) {
+			console.log("Artist(s): " + songInfo[i].album.artists[i].name);
+			console.log("Song Name: " + songInfo[i].name);
+			console.log("Preview URL: " + songInfo[i].preview_url);
+			console.log("Album Name: " + songInfo[i].album.name);
+		}
+
+	
 	});
 }

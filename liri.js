@@ -28,6 +28,7 @@ switch (action) {
 		break;
 }
 
+//CREATE MORE CHECKS FOR ERRORS IF NEEDED//
 function concertThis() {
 	request(bandsUrl, function (error, response, body) {
 		if (!error && response.statusCode === 200) {
@@ -73,7 +74,7 @@ function movieThis() {
 	});
 }
 
-
+//SET UP FOR OTHER FUNCTIONS TO RUN DEPENDING ON ACTION
 function doWhatItSays() {
 	fs.readFile("random.txt", "utf8", function (error, data) {
 		if (error) {
@@ -84,5 +85,17 @@ function doWhatItSays() {
 		input = dataArray[1];
 		console.log(action + " " + input);
 		spotifyThisSong(input);
-		});
+	});
+}
+
+//BONUS KEEP A LOG//
+function logData() {
+	fs.appendFile("log.txt", text, function (err) {
+		if (err) {
+			console.log(err);
+		}
+		else {
+			console.log("Content Added!");
+		}
+	});
 }

@@ -7,29 +7,36 @@ var input = process.argv.slice(3).join(" ");
 var request = require("request");
 var moment = require("moment");
 var fs = require("fs");
-var bandsUrl = "https://rest.bandsintown.com/artists/" + input + "/events?app_id=codingbootcamp";
-var movieUrl = "http://www.omdbapi.com/?t=" + input + "&y=&plot=short&apikey=de79b866";
 
 switch (action) {
 	case "concert-this":
-		concertThis();
-		break;
-
+	concertThis(input);
+	break;
+	
 	case "spotify-this-song":
-		spotifyThisSong(input);
-		break;
-
+	if (input){
+	spotifyThisSong(input);
+	} else{
+		spotifyThisSong("The Sign, Ace of Base");
+	}
+	break;
+	
 	case "movie-this":
-		movieThis();
-		break;
-
+	if(input){
+	movieThis(input);
+	} else {
+		movieThis("Mr. Nobody");
+	}
+	break;
+	
 	case "do-what-it-says":
-		doWhatItSays();
-		break;
+	doWhatItSays();
+	break;
 }
 
 //CREATE MORE CHECKS FOR ERRORS IF NEEDED//
-function concertThis() {
+function concertThis(input) {
+	var bandsUrl = "https://rest.bandsintown.com/artists/" + input + "/events?app_id=codingbootcamp";
 	request(bandsUrl, function (error, response, body) {
 		if (!error && response.statusCode === 200) {
 			var venueInfo = JSON.parse(body);
@@ -42,7 +49,7 @@ function concertThis() {
 	});
 }
 
-// "The Sign" by Ace of Base as default - DO I NEED A LOOP?
+//DO I NEED A LOOP? - Keeping for now if want to increase limit later//
 function spotifyThisSong(input) {
 	spotify.search({ type: 'track', query: input, limit: 1 }, function (err, data) {
 		if (err) {
@@ -58,8 +65,8 @@ function spotifyThisSong(input) {
 	});
 }
 
-//NEED TO ADD MR.NOBODY AS A DEFAULT///
-function movieThis() {
+function movieThis(input) {
+	var movieUrl = "http://www.omdbapi.com/?t=" + input + "&y=&plot=short&apikey=de79b866";
 	request(movieUrl, function (error, response, body) {
 		if (!error && response.statusCode === 200) {
 			var movieInfo = JSON.parse(body);
@@ -90,12 +97,15 @@ function doWhatItSays() {
 
 //BONUS KEEP A LOG//
 function logData() {
-	fs.appendFile("log.txt", text, function (err) {
+	var output = "";
+	for (var i = 0; i < node.length; i++) {
+			var elem = node[i];
+			output += elem.path.toString() + "\n";
+	}
+	fs.appendFile("log.txt", output, function (err) {
 		if (err) {
-			console.log(err);
+			return console.log(err);
 		}
-		else {
-			console.log("Content Added!");
-		}
+		console.log("Content Added!");
 	});
 }

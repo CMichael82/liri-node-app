@@ -14,13 +14,14 @@ Using node in the command line, enter one of the following commands to request t
 	* Date of the Event
 
 2. "spotify-this-song"
+	If no song is entered, LIRI will default to "The Sign" by Ace of Base.
 	* Artist(s)
 	* The Song's Name
 	* Spotify's Preview Link
 	* The Album that the song is from
-	If no song is entered, LIRI will default to "The Sign" by Ace of Base.
 
 3. "movie-this"
+	If no movie is entered, LIRI will default to Mr. Nobody.
 	* Title of the movie.
 	* Year the movie came out.
 	* IMDB Rating of the movie.
@@ -29,7 +30,6 @@ Using node in the command line, enter one of the following commands to request t
 	* Language of the movie.
 	* Plot of the movie.
 	* Actors in the movie.
-	If no movie is entered, LIRI will default to Mr. Nobody.
 
 4. "do-what-it-says"
 	LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.

@@ -10,28 +10,28 @@ var fs = require("fs");
 
 switch (action) {
 	case "concert-this":
-	concertThis(input);
-	break;
-	
+		concertThis(input);
+		break;
+
 	case "spotify-this-song":
-	if (input){
-	spotifyThisSong(input);
-	} else{
-		spotifyThisSong("The Sign, Ace of Base");
-	}
-	break;
-	
+		if (input) {
+			spotifyThisSong(input);
+		} else {
+			spotifyThisSong("The Sign, Ace of Base");
+		}
+		break;
+
 	case "movie-this":
-	if(input){
-	movieThis(input);
-	} else {
-		movieThis("Mr. Nobody");
-	}
-	break;
-	
+		if (input) {
+			movieThis(input);
+		} else {
+			movieThis("Mr. Nobody");
+		}
+		break;
+
 	case "do-what-it-says":
-	doWhatItSays();
-	break;
+		doWhatItSays();
+		break;
 }
 
 //CREATE MORE CHECKS FOR ERRORS IF NEEDED//
@@ -41,10 +41,13 @@ function concertThis(input) {
 		if (!error && response.statusCode === 200) {
 			var venueInfo = JSON.parse(body);
 			for (i = 0; i < venueInfo.length; i++) {
-				console.log("Name of Venue: " + venueInfo[i].venue.name);
-				console.log("Venue Location: " + venueInfo[i].venue.city + " " + venueInfo[i].venue.region + " " + venueInfo[i].venue.country);
-				console.log("Date of event: " + moment(venueInfo[i].datetime).format("MM/DD/YYYY"));
+				var output = "-----------------" + "\n" + "Name of Venue: " + venueInfo[i].venue.name + "\n" + "Venue Location: " + venueInfo[i].venue.city + " " + venueInfo[i].venue.region + " " + venueInfo[i].venue.country + "\n" + "Date of event: " + moment(venueInfo[i].datetime).format("MM/DD/YYYY") + "\n" + "-----------------";
+				console.log(output);
+				logData(output);
 			}
+
+		} else {
+			return console.log("Error: " + error);
 		}
 	});
 }
@@ -57,10 +60,9 @@ function spotifyThisSong(input) {
 		}
 		var songInfo = data.tracks.items
 		for (var i = 0; i < songInfo.length; i++) {
-			console.log("Artist(s): " + songInfo[i].album.artists[i].name);
-			console.log("Song Name: " + songInfo[i].name);
-			console.log("Preview URL: " + songInfo[i].preview_url);
-			console.log("Album Name: " + songInfo[i].album.name);
+			var output = "-----------------" + "\n" + "Artist(s): " + songInfo[i].album.artists[i].name + "\n" + "Song Name: " + songInfo[i].name + "\n" + "Preview URL: " + songInfo[i].preview_url + "\n" + "Album Name: " + songInfo[i].album.name + "\n" + "-----------------";
+			console.log(output);
+			logData(output);
 		}
 	});
 }
@@ -70,13 +72,11 @@ function movieThis(input) {
 	request(movieUrl, function (error, response, body) {
 		if (!error && response.statusCode === 200) {
 			var movieInfo = JSON.parse(body);
-			console.log("Movie Title: " + movieInfo.Title);
-			console.log("Release Year: " + movieInfo.Year);
-			console.log("IMDB Rating: " + movieInfo.imdbRating);
-			console.log("Rotten Tomatoes Rating: " + movieInfo.Ratings[1].Value);
-			console.log("Language: " + movieInfo.Language);
-			console.log("Plot: " + movieInfo.Plot);
-			console.log("Actors: " + movieInfo.Actors);
+			var output = "-----------------" + "\n" + "Movie Title: " + movieInfo.Title + "\n" + "Release Year: " + movieInfo.Year + "\n" + "IMDB Rating: " + movieInfo.imdbRating + "\n" + "Rotten Tomatoes Rating: " + movieInfo.Ratings[1].Value + "\n" + "Language: " + movieInfo.Language + "\n" + "Plot: " + movieInfo.Plot + "\n" + "Actors: " + movieInfo.Actors + "\n" + "-----------------";
+			console.log(output);
+			logData(output);
+		} else {
+			return console.log("Error: " + error);
 		}
 	});
 }
@@ -91,17 +91,20 @@ function doWhatItSays() {
 		action = dataArray[0];
 		input = dataArray[1];
 		console.log(action + " " + input);
-		spotifyThisSong(input);
+		if (action === "concert-this") {
+			concertThis(input);
+		}
+		if (action === "spotify-this-song") {
+			spotifyThisSong(input);
+		}
+		if (action === "movie-this") {
+			movieThis(input);
+		}
 	});
 }
 
 //BONUS KEEP A LOG//
-function logData() {
-	var output = "";
-	for (var i = 0; i < node.length; i++) {
-			var elem = node[i];
-			output += elem.path.toString() + "\n";
-	}
+function logData(output) {
 	fs.appendFile("log.txt", output, function (err) {
 		if (err) {
 			return console.log(err);
@@ -109,3 +112,4 @@ function logData() {
 		console.log("Content Added!");
 	});
 }
+

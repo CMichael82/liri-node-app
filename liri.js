@@ -36,14 +36,20 @@ switch (action) {
 
 //CREATE MORE CHECKS FOR ERRORS IF NEEDED//
 function concertThis(input) {
+	var divider = "\n---------------------------------------------------\n\n";
 	var bandsUrl = "https://rest.bandsintown.com/artists/" + input + "/events?app_id=codingbootcamp";
 	request(bandsUrl, function (error, response, body) {
 		if (!error && response.statusCode === 200) {
 			var venueInfo = JSON.parse(body);
 			for (i = 0; i < venueInfo.length; i++) {
-				var output = "-----------------" + "\n" + "Name of Venue: " + venueInfo[i].venue.name + "\n" + "Venue Location: " + venueInfo[i].venue.city + " " + venueInfo[i].venue.region + " " + venueInfo[i].venue.country + "\n" + "Date of event: " + moment(venueInfo[i].datetime).format("MM/DD/YYYY") + "\n" + "-----------------";
-				console.log(output);
-				logData(output);
+				var output = [
+					"Name of Venue: " + venueInfo[i].venue.name,
+					"Venue Location: " + venueInfo[i].venue.city + " " + venueInfo[i].venue.region + " " + venueInfo[i].venue.country,
+					"Date of event: " + moment(venueInfo[i].datetime).format("MM/DD/YYYY")
+				].join("\n\n");
+
+				console.log(output + divider);
+				logData(output + divider);
 			}
 
 		} else {
@@ -54,27 +60,42 @@ function concertThis(input) {
 
 //DO I NEED A LOOP? - Keeping for now if want to increase limit later//
 function spotifyThisSong(input) {
+	var divider = "\n---------------------------------------------------\n\n";
 	spotify.search({ type: 'track', query: input, limit: 1 }, function (err, data) {
 		if (err) {
 			return console.log('Error occurred: ' + err);
 		}
 		var songInfo = data.tracks.items
 		for (var i = 0; i < songInfo.length; i++) {
-			var output = "-----------------" + "\n" + "Artist(s): " + songInfo[i].album.artists[i].name + "\n" + "Song Name: " + songInfo[i].name + "\n" + "Preview URL: " + songInfo[i].preview_url + "\n" + "Album Name: " + songInfo[i].album.name + "\n" + "-----------------";
-			console.log(output);
-			logData(output);
+			var output = [
+				"Artist(s): " + songInfo[i].album.artists[i].name,
+				"Song Name: " + songInfo[i].name,
+				"Preview URL: " + songInfo[i].preview_url,
+				"Album Name: " + songInfo[i].album.name,
+			].join("\n\n");
+			console.log(output + divider);
+			logData(output + divider);
 		}
 	});
 }
 
 function movieThis(input) {
+	var divider = "\n---------------------------------------------------\n\n";
 	var movieUrl = "http://www.omdbapi.com/?t=" + input + "&y=&plot=short&apikey=de79b866";
 	request(movieUrl, function (error, response, body) {
 		if (!error && response.statusCode === 200) {
 			var movieInfo = JSON.parse(body);
-			var output = "-----------------" + "\n" + "Movie Title: " + movieInfo.Title + "\n" + "Release Year: " + movieInfo.Year + "\n" + "IMDB Rating: " + movieInfo.imdbRating + "\n" + "Rotten Tomatoes Rating: " + movieInfo.Ratings[1].Value + "\n" + "Language: " + movieInfo.Language + "\n" + "Plot: " + movieInfo.Plot + "\n" + "Actors: " + movieInfo.Actors + "\n" + "-----------------";
-			console.log(output);
-			logData(output);
+			var output = [
+			"Movie Title: " + movieInfo.Title,
+			"Release Year: " + movieInfo.Year,
+			"IMDB Rating: " + movieInfo.imdbRating,
+			"Rotten Tomatoes Rating: " + movieInfo.Ratings[1].Value,
+			"Language: " + movieInfo.Language,
+			"Plot: " + movieInfo.Plot,
+			"Actors: " + movieInfo.Actors,
+		].join("\n\n");
+			console.log(output + divider);
+			logData(output + divider);
 		} else {
 			return console.log("Error: " + error);
 		}

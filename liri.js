@@ -133,4 +133,3 @@ function logData(output) {
 		console.log("Content Added!");
 	});
 }
-
